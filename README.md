@@ -1,70 +1,110 @@
-# Getting Started with Create React App
+create react app  and set it up 
+npm i axios 
+import useEffect hook -> import { useEffect } from 'react';
+import axios -> import axios from "axios"
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+//this is our sample api to use -> "https://jsonplaceholder.typicode.com/posts"
 
-## Available Scripts
+Now in the app function -> we call in useEffect hook ->
 
-In the project directory, you can run:
+useEffect(()=>{
 
-### `npm start`
+          },[])
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+Now inside this useEffect hook render the axios method -> axios.get("inside here we place the api from which we want to fetch data")
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---------------------------------------------------------------
+i.e-> 
+useEffect(()=>{
+axios.get("https://jsonplaceholder.typicode.com/posts")
+     .then((res)=>console.log(res) ); //res.data for getting only data 
+          },[])
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---------------------------------------------------------------
+this will give us an object in our console which will contain our data and if we specifically want to access data only we just simply 
+have to add res.data instead of console.log res 
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+================================***********************************====================================*******************************
+Till here we will get our data that is fetched from our api 
 
-## Learn More
+but now if we want to display this data onto our main screen we need to store it on some state so we make use of useState hook 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+steps -> 
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1stly import useState hook -> import { useEffect , useState } from 'react';
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2ndly now we call in the useState hook -> const [data , setData ] = useState([]);   //here because data is in form of array so we 
+                                                                                    //initialised the initial value with an empty array 
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+3rd Now instead of console.logging res.data inside our useEffect hook we simply call setData and pass the res.data to it 
+i.e-> .then((res)=> setData(res.data));
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
+4th now we use .map method to finally render the data -> 
+go inside the return statement  -> 
+{data.map((post) => {
+        const { id, title, body } = post;
+        return (
+          <div className="card" key={id}>
+            <h2>{title}</h2>
+            <p>{body}</p>
+          </div>
+        );
+})}
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
+//this will display the data onto the screen 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+**************************************************************************************************************************************
+                                                       COMPLETE PROGRAM
+
+import "./App.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+function App() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts")
+      //  .then((res)=>console.log(res.data) );    // it is for simply checking/logging in the data being fetched to the console
+      .then((res) => setData(res.data));
+  }, []);
+
+  return (
+    <div className="app">
+      Hello World
+      {data.map((post) => {
+        const { id, title, body } = post;
+        return (
+          <div className="card" key={id}>
+            <h2>{title}</h2>
+            <p>{body}</p>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+export default App;
+
+**************************************************************************************************************************************
